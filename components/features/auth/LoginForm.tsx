@@ -115,18 +115,16 @@ export default function LoginForm() {
   return (
     <div className="flex w-full max-w-md flex-shrink-0 flex-col overflow-hidden rounded-xl border border-slate-200/50 border-slate-300/50 bg-[#F8FAFC] p-8 shadow-2xl md:p-10">
       {/* Branding */}
-      <div className="mb-8 flex flex-col items-center text-center">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight text-slate-800">
-          NODO
-        </h1>
+      <div className="mb-6 flex flex-col items-center text-center">
         <Image
           src="/logo_nodo.png"
           alt="NODO Logo"
-          width={240}
-          height={96}
-          className="mb-4 h-24 w-[240px] object-contain transition-transform duration-300 hover:scale-105"
+          width={180}
+          height={72}
+          className="mb-3 h-16 w-[180px] object-contain transition-transform duration-300 hover:scale-105"
+          priority
         />
-        <p className="px-4 text-sm font-medium leading-relaxed text-slate-500">
+        <p className="text-xs font-medium text-slate-500 max-w-[260px]">
           Infraestructura de validación que conecta al productor con el consumidor final
         </p>
       </div>
@@ -259,3 +257,6 @@ export default function LoginForm() {
     </div>
   )
 }
+
+
+

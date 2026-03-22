@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from 'react'
 import { APP_NAME } from '@/lib/constants'
 import Header from '@/components/features/shared/Header'
 import Footer from '@/components/features/shared/Footer'
@@ -5,178 +8,246 @@ import HomeAuthActions from '@/components/features/shared/HomeAuthActions'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const HERO_BACKGROUND_IMAGE = '/nodoBackground.jpg'
+// const HERO_BACKGROUND_IMAGE = '/logo_nodo.png'
 
-function QrScannerIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M3 3h6v2H5v4H3V3zm2 12H3v4h4v-2H5v-2zm12 0v2h4v4h2v-6h-6zm0-12h2v4h4v2h-6V3zM9 9h2v2H9V9zm4 0h2v2h-2V9zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2z" />
-    </svg>
-  )
-}
+// Iconos SVG personalizados
+const SearchIcon = ({ className = "h-5 w-5" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+)
 
-function PrecisionManufacturingIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M19.93 8.21l-3.6 1.68L14 7.7V6.3l2.33-2.19 3.6 1.68c.38.18.82.01 1-.36.18-.38.01-.82-.36-1L16.65 2.6c-.38-.18-.82-.01-1 .36-.18.38-.01.82.36 1L18 4.9v1.4l2.33 2.19c.38.18.82.01 1-.36.18-.38.01-.82-.36-1zM4.5 11h-2V9H1v6h1.5v-2h2v2H6V9H4.5v2zm2.5-.5h1v1H7v-1zm2 0h1v1H9v-1zm2 0h1v1h-1v-1zm2 0h1v1h-1v-1zm2 0h1v1h-1v-1zm2 0h1v1h-1v-1zM22 14v-2h-1.5v2h-2v1.5h2v2H22v-2h1.5v-2H22zm-1.5 2.5h-2v-1h2v1z" />
-    </svg>
-  )
-}
+const QrScannerIcon = ({ className = "h-5 w-5" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h6v6h-6z" />
+    <line x1="9" y1="3" x2="15" y2="3" />
+    <line x1="9" y1="21" x2="15" y2="21" />
+    <line x1="3" y1="9" x2="3" y2="15" />
+    <line x1="21" y1="9" x2="21" y2="15" />
+  </svg>
+)
 
-function ArrowForwardIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-4 w-4'} aria-hidden>
-      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
-    </svg>
-  )
-}
+const ArrowForwardIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+)
 
-function AnalyticsIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-    </svg>
-  )
-}
+// Iconos para botones de navegación
+const CertificationIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 2L2 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
+    <line x1="12" y1="11" x2="12" y2="17" />
+    <line x1="9" y1="14" x2="15" y2="14" />
+  </svg>
+)
 
-function BlockchainIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z" />
-    </svg>
-  )
-}
+const TimelineIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+    <line x1="4" y1="4" x2="8" y2="8" />
+  </svg>
+)
 
-function CertificationIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M12 2L2 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
-    </svg>
-  )
-}
+const TraceabilityIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M3 12h4l3-9 4 18 3-9h4" />
+  </svg>
+)
 
-function PaymentIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4h3l3-3-3-3zm-3 6h-2v2h-2v-2h-2v-2h2V8h2v2h2v2z" />
-    </svg>
-  )
-}
+const DashboardIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+    <rect x="14" y="14" width="7" height="7" />
+  </svg>
+)
 
-function SecurityIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? 'h-5 w-5'} aria-hidden>
-      <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
-    </svg>
-  )
-}
+const ExportIcon = ({ className = "h-4 w-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M21 16v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+)
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="flex flex-col items-center rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 sm:p-6 text-center">
-      <div className="mb-3 rounded-lg bg-palette-accent/10 p-3 text-palette-accent">{icon}</div>
-      <h3 className="mb-2 text-base font-semibold text-white">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
-    </div>
-  )
-}
+// Iconos para características
+const BlockchainIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+    <line x1="8" y1="12" x2="16" y2="12" />
+    <line x1="12" y1="8" x2="12" y2="16" />
+  </svg>
+)
+
+const CheckIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+)
+
+const QrIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="3" y="3" width="6" height="6" />
+    <rect x="15" y="3" width="6" height="6" />
+    <rect x="3" y="15" width="6" height="6" />
+    <rect x="15" y="15" width="6" height="6" />
+  </svg>
+)
+
+const AnalyticsIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <line x1="18" y1="20" x2="18" y2="10" />
+    <line x1="12" y1="20" x2="12" y2="4" />
+    <line x1="6" y1="20" x2="6" y2="14" />
+  </svg>
+)
+
+const ShieldIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" />
+  </svg>
+)
+
+const PaymentIcon = ({ className = "h-6 w-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="2" y="5" width="20" height="14" rx="2" ry="2" />
+    <line x1="2" y1="10" x2="22" y2="10" />
+  </svg>
+)
 
 export default function IndustriasLanding() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      console.log('Buscando:', searchQuery)
+    }
+  }
+
+  const navButtons = [
+    { icon: <CertificationIcon />, label: 'CERTIFICACIONES', href: '/certifications' },
+    { icon: <TimelineIcon />, label: 'LÍNEA DE TIEMPO', href: '/timeline' },
+    { icon: <TraceabilityIcon />, label: 'TRAZABILIDAD POR LOTE', href: '/traceability' },
+    { icon: <DashboardIcon />, label: 'DASHBOARD EMPRESARIAL', href: '/dashboard' },
+    { icon: <ExportIcon />, label: 'REQUISITOS DE EXPORTACIÓN', href: '/export-requirements' },
+  ]
+
   return (
-    <div className="flex min-h-screen flex-col bg-auth-bg font-sans text-slate-100 antialiased">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#0a0f1a] via-[#0f1420] to-[#05080f] font-sans text-slate-100 antialiased">
       <Header />
 
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:py-12">
+      <main className="flex flex-1 flex-col items-center justify-center px-2 py-4 sm:py-12">
         <div className="w-full max-w-6xl">
-          <div className="mb-12 text-center sm:mb-16">
-            <h1 className="mb-3 text-3xl font-black tracking-tight text-white sm:text-4xl md:text-5xl">
-               <span className="text-palette-accent">NODO</span>
-            </h1>
+          {/* Header con logo y acciones */}
+          <div className="mb-12 text-center sm:mb-16 text-align-center relative">
 
-            <HomeAuthActions />
+
+  {/* <Image
+    src={HERO_BACKGROUND_IMAGE}
+    alt="NODO - Trazabilidad blockchain"
+    width={100}
+    height={100}
+    priority
+    className="opacity-80"
+    text-align="center"
+  /> */}
+
+  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-transparent to-transparent" />
+            {/* <HomeAuthActions /> */}
           </div>
 
+          {/* Hero con buscador */}
           <div className="mb-16">
-            <div className="relative overflow-hidden rounded-2xl border border-slate-700/50 aspect-[21/9] min-h-[200px] sm:min-h-[260px]">
-              <Image
-                src={HERO_BACKGROUND_IMAGE}
-                alt="NODO - Trazabilidad blockchain"
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
+            {/* Buscador */}
+            <div className="mt-6">
+              <form onSubmit={handleSearch} className="mx-auto max-w-3xl">
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">
+                    <SearchIcon className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar lote, certificado, producto o código QR..."
+                    className="w-full rounded-xl border border-emerald-500/30 bg-slate-900/60 py-3 pl-11 pr-24 text-sm text-white placeholder:text-slate-500 backdrop-blur-sm outline-none transition-all focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-1.5 text-xs font-medium text-white transition-all hover:from-emerald-400 hover:to-teal-400"
+                  >
+                    Buscar
+                  </button>
+                </div>
+              </form>
             </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/verify-product"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-palette-accent px-8 py-3 text-sm font-bold text-slate-900 transition-colors hover:bg-palette-accent-hover"
-              >
-                Escanear
-                <ArrowForwardIcon />
-              </Link>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-palette-accent px-8 py-3 text-sm font-bold text-palette-accent transition-colors hover:bg-palette-accent/10"
-              >
-                Panel gerencial
-                <ArrowForwardIcon />
-              </Link>
+
+            {/* Botones de navegación */}
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              {navButtons.map((btn) => (
+                <Link
+                  key={btn.label}
+                  href={btn.href}
+                  className="group flex items-center gap-2 rounded-full border border-emerald-500/30 bg-slate-800/40 px-3 py-1.5 text-[10px] font-medium text-emerald-300 backdrop-blur-sm transition-all hover:border-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-200 sm:gap-2.5 sm:px-4 sm:py-2 sm:text-xs"
+                >
+                  <span className="text-emerald-400">{btn.icon}</span>
+                  <span className="whitespace-nowrap">{btn.label}</span>
+                </Link>
+              ))}
             </div>
+
+            {/* Texto destacado */}
+            <p className="mt-8 text-center text-sm text-emerald-300/70">
+              Trazabilidad en tiempo real con tecnología blockchain
+            </p>
           </div>
 
+          {/* Características Principales */}
           <div className="mb-16">
             <h2 className="mb-8 text-center text-2xl font-bold text-white sm:text-3xl">
               Características Principales
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <FeatureCard
-                icon={<BlockchainIcon className="h-6 w-6" />}
-                title="Verificación Blockchain"
-                description="Toda la información está registrada en blockchain para máxima transparencia e inmutabilidad."
-              />
-              <FeatureCard
-                icon={<CertificationIcon className="h-6 w-6" />}
-                title="Certificaciones ISO"
-                description="Integración con estándares ISO para asegurar calidad y trazabilidad en cada paso."
-              />
-              <FeatureCard
-                icon={<QrScannerIcon className="h-6 w-6" />}
-                title="Código QR"
-                description="Genera y escanea códigos QR para identificar productos instantáneamente."
-              />
-              <FeatureCard
-                icon={<AnalyticsIcon className="h-6 w-6" />}
-                title="Reportes Detallados"
-                description="Análisis en tiempo real de producción, despachos y conformidad de productos."
-              />
-              <FeatureCard
-                icon={<SecurityIcon className="h-6 w-6" />}
-                title="Seguridad Web3"
-                description="Encriptación de extremo a extremo y autenticación descentralizada."
-              />
-              <FeatureCard
-                icon={<PaymentIcon className="h-6 w-6" />}
-                title="Gestión de Pagos"
-                description="Planes flexibles con facturación transparente para todos los usuarios."
-              />
+              {[
+                { icon: <BlockchainIcon />, title: 'Verificación Blockchain', desc: 'Toda la información está registrada en blockchain para máxima transparencia e inmutabilidad.' },
+                { icon: <CheckIcon />, title: 'Certificaciones ISO', desc: 'Integración con estándares ISO para asegurar calidad y trazabilidad en cada paso.' },
+                { icon: <QrIcon />, title: 'Código QR', desc: 'Genera y escanea códigos QR para identificar productos instantáneamente.' },
+                { icon: <AnalyticsIcon />, title: 'Reportes Detallados', desc: 'Análisis en tiempo real de producción, despachos y conformidad de productos.' },
+                { icon: <ShieldIcon />, title: 'Seguridad Web3', desc: 'Encriptación de extremo a extremo y autenticación descentralizada.' },
+                { icon: <PaymentIcon />, title: 'Gestión de Pagos', desc: 'Planes flexibles con facturación transparente para todos los usuarios.' },
+              ].map((item) => (
+                <div key={item.title} className="flex flex-col items-center rounded-xl border border-emerald-500/20 bg-slate-800/30 p-4 text-center transition-all hover:border-emerald-400/50 hover:bg-slate-800/50 sm:p-6">
+                  <div className="mb-3 rounded-lg bg-emerald-500/10 p-3 text-emerald-400">
+                    {item.icon}
+                  </div>
+                  <h3 className="mb-2 text-base font-semibold text-white">{item.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
+          {/* ¿Cómo Funciona? */}
           <div className="mb-16">
             <h2 className="mb-8 text-center text-2xl font-bold text-white sm:text-3xl">
               ¿Cómo Funciona?
             </h2>
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
               {[
-                { step: '1', title: 'Registra', description: 'Crea tu cuenta como consumidor, productor o empresa certificadora ISO.' },
-                { step: '2', title: 'Registra Productos', description: 'Genera códigos QR únicos para cada lote de productos con datos verificables.' },
-                { step: '3', title: 'Comparte & Verifica', description: 'Consumidores escanean para ver el historial completo y certificaciones.' },
+                { step: '1', icon: <BlockchainIcon className="h-6 w-6" />, title: 'Registra', description: 'Crea tu cuenta como consumidor, productor o empresa certificadora ISO.' },
+                { step: '2', icon: <QrIcon className="h-6 w-6" />, title: 'Registra Productos', description: 'Genera códigos QR únicos para cada lote de productos con datos verificables.' },
+                { step: '3', icon: <SearchIcon className="h-6 w-6" />, title: 'Comparte & Verifica', description: 'Consumidores escanean para ver el historial completo y certificaciones.' },
               ].map((item) => (
                 <div key={item.step} className="text-center">
                   <div className="mb-4 flex justify-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-palette-accent text-lg font-bold text-slate-900">
-                      {item.step}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                      {item.icon}
                     </div>
                   </div>
                   <h3 className="mb-2 font-semibold text-white text-base">{item.title}</h3>
@@ -186,29 +257,33 @@ export default function IndustriasLanding() {
             </div>
           </div>
 
+          {/* Para Diferentes Usuarios */}
           <div className="mb-16">
             <h2 className="mb-8 text-center text-2xl font-bold text-white sm:text-3xl">
               Para Diferentes Usuarios
             </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
               {[
-                { role: 'Consumidor', icon: '🛒', benefit: 'Verifica la autenticidad y origen de productos antes de comprar' },
-                { role: 'Productor', icon: '🚜', benefit: 'Gestiona tu cadena de producción y demuestra calidad' },
-                { role: 'Distribuidor', icon: '🚚', benefit: 'Controla logística y trazabilidad en tiempo real' },
-                { role: 'Empresa ISO', icon: '✅', benefit: 'Certifica y audita con estándares internacionales' },
-                { role: 'Regulador', icon: '📋', benefit: 'Supervisa compliance y regulaciones del sector' },
-                { role: 'Retail', icon: '🏪', benefit: 'Ofrece garantía de autenticidad a tus clientes' },
+                { role: 'Consumidor', icon: <SearchIcon className="h-5 w-5" />, benefit: 'Verifica autenticidad' },
+                { role: 'Productor', icon: <BlockchainIcon className="h-5 w-5" />, benefit: 'Gestiona producción' },
+                { role: 'Distribuidor', icon: <ArrowForwardIcon className="h-5 w-5" />, benefit: 'Controla logística' },
+                { role: 'Empresa ISO', icon: <CheckIcon className="h-5 w-5" />, benefit: 'Certifica estándares' },
+                { role: 'Regulador', icon: <ShieldIcon className="h-5 w-5" />, benefit: 'Supervisa compliance' },
+                { role: 'Retail', icon: <QrIcon className="h-5 w-5" />, benefit: 'Ofrece garantía' },
               ].map((user) => (
-                <div key={user.role} className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 sm:p-6 text-center">
-                  <div className="mb-3 text-3xl">{user.icon}</div>
-                  <h3 className="mb-2 font-semibold text-white text-base">{user.role}</h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{user.benefit}</p>
+                <div key={user.role} className="rounded-xl border border-emerald-500/20 bg-slate-800/30 p-3 text-center transition-all hover:border-emerald-400/50 hover:bg-slate-800/50">
+                  <div className="mb-1 flex justify-center text-emerald-400">
+                    {user.icon}
+                  </div>
+                  <h3 className="mb-0.5 text-xs font-semibold text-white sm:text-sm">{user.role}</h3>
+                  <p className="text-[10px] text-slate-400 sm:text-xs">{user.benefit}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-xl border border-palette-accent/30 bg-gradient-to-r from-palette-accent/10 to-palette-accent/5 p-8 sm:p-12 text-center">
+          {/* CTA Final */}
+          <div className="rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-8 text-center sm:p-12 backdrop-blur-sm">
             <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Comienza hoy</h2>
             <p className="mb-6 text-sm sm:text-base text-slate-300">
               Únete a la revolución de la trazabilidad blockchain
@@ -216,14 +291,14 @@ export default function IndustriasLanding() {
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/register"
-                className="flex items-center justify-center gap-2 rounded-lg bg-palette-accent px-6 py-3 text-sm font-bold text-slate-900 hover:bg-palette-accent-hover transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 text-sm font-bold text-white transition-all hover:from-emerald-400 hover:to-teal-400 hover:scale-105"
               >
                 Crear Cuenta
-                <ArrowForwardIcon />
+                <ArrowForwardIcon className="h-4 w-4" />
               </Link>
               <Link
                 href="/verify-product"
-                className="flex items-center justify-center gap-2 rounded-lg border border-palette-accent px-6 py-3 text-sm font-bold text-palette-accent hover:bg-palette-accent/10 transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg border border-emerald-500/50 px-6 py-3 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500/10"
               >
                 Escanear Producto
                 <QrScannerIcon className="h-4 w-4" />
